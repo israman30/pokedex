@@ -1,14 +1,25 @@
 import { useEffect, useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 interface Pokemon {
   name: string;
   image: string;
+  imageBack: string;
+  types: PokemonType[];
+}
+
+interface PokemonType {
+  type: {
+    name: string;
+    url: string;
+  }
 }
 
 export default function Index() {
 
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+
+  console.log(JSON.stringify(pokemons[0], null, 2))
 
   useEffect(() => {
     // fetch pokemons
@@ -27,13 +38,15 @@ export default function Index() {
           const details = await res.json();
           return {
             name: pokemon.name,
-            image: details.sprites.front_default // main sprite
+            image: details.sprites.front_default, // main sprite
+            imageBack: details.sprites.imageBack,
+            types: details.types
           }
         })
       );
 
       // console.log(data.results)
-      console.log(detailedPokemons);
+      // console.log(detailedPokemons);
       setPokemons(detailedPokemons);
     } catch(e) {
       console.log(e)
@@ -44,13 +57,34 @@ export default function Index() {
     <ScrollView>
       { pokemons.map((pokemon) => (
         <View key={pokemon.name}>
-          <Text>{pokemon.name}</Text>
-          <Image
-            source={{uri: pokemon.image}}
-            style={{width: 100, height: 100}}
-          />
+          <Text style={styles.name}>{pokemon.name}</Text>
+          <Text style={styles.type}>{pokemon.types[0].type.name}</Text>
+          <View style= {{
+            flexDirection: "row",
+          }}>
+            <Image
+              source={{ uri: pokemon.image }}
+              style={{ width: 150, height: 150 }}
+            />
+            <Image
+              source={{ uri: pokemon.imageBack }}
+              style={{ width: 100, height: 100 }}
+            />
+          </View>
         </View>
       )) }
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  name: {
+    fontSize: 28,
+    fontWeight: "bold"
+  },
+  type: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "gray"
+  }
+})
