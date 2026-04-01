@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -83,28 +84,33 @@ export default function Index() {
       padding: 16
     }}>
       { pokemons.map((pokemon) => (
-        <View key={pokemon.name} style={{
-          // @ts-ignore
-          backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
-          padding: 20,
-          borderRadius: 20
-        }}>
-          <Text style={styles.name}>{pokemon.name}</Text>
-          <Text style={styles.type}>{pokemon.types[0].type.name}</Text>
-          <View style= {{
-            flexDirection: "row",
-          }}>
-            <Image
-              source={{ uri: pokemon.image }}
-              style={{ width: 150, height: 150 }}
-            />
-            <Image
-              source={{ uri: pokemon.imageBack }}
-              style={{ width: 100, height: 100 }}
-            />
+        <Link key={pokemon.name}
+          href={{ pathname: "/detail", params: { name: pokemon.name } }}
+           style={{
+            // @ts-ignore
+            backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
+            padding: 20,
+            borderRadius: 20
+          }}
+        >
+          <View>
+            <Text style={styles.name}>{pokemon.name}</Text>
+            <Text style={styles.type}>{pokemon.types[0].type.name}</Text>
+            <View style={{
+              flexDirection: "row",
+            }}>
+              <Image
+                source={{ uri: pokemon.image }}
+                style={{ width: 150, height: 150 }}
+              />
+              <Image
+                source={{ uri: pokemon.imageBack }}
+                style={{ width: 100, height: 100 }}
+              />
+            </View>
           </View>
-        </View>
-      )) }
+        </Link>
+      ))}
     </ScrollView>
   );
 }
