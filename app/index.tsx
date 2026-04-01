@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
 
 interface Pokemon {
   name: string;
-  url: string;
+  image: string;
 }
 
 export default function Index() {
@@ -19,8 +19,22 @@ export default function Index() {
     try {
       const response = await fetch("https://pokeapi.co/api/v2/pokemon/?limit=20&offset=20");
       const data = await response.json();
-      console.log(data.results)
-      setPokemons(data.results);
+
+      // Fetching detail info of eahc pokemon in parallel
+      const detailedPokemons = await Promise.all(
+        data.results.map(async (pokemon: any) => {
+          const res = await fetch(pokemon.url);
+          const details = await res.json();
+          return {
+            name: pokemon.name,
+            image: details.sprites.front_default // main sprite
+          }
+        })
+      );
+
+      // console.log(data.results)
+      console.log(detailedPokemons);
+      setPokemons(detailedPokemons);
     } catch(e) {
       console.log(e)
     }
@@ -31,6 +45,10 @@ export default function Index() {
       { pokemons.map((pokemon) => (
         <View key={pokemon.name}>
           <Text>{pokemon.name}</Text>
+          <Image
+            source={{uri: pokemon.image}}
+            style={{width: 100, height: 100}}
+          />
         </View>
       )) }
     </ScrollView>
