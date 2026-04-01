@@ -64,7 +64,7 @@ export default function Index() {
           return {
             name: pokemon.name,
             image: details.sprites.front_default, // main sprite
-            imageBack: details.sprites.imageBack,
+            imageBack: details.sprites.back_default,
             types: details.types
           }
         })
