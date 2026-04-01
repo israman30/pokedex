@@ -15,6 +15,30 @@ interface PokemonType {
   }
 }
 
+const colorsByType = {
+  // Original & Primary Types
+  grass: "#48D0B0",    // Mint Green
+  fire: "#FB6C6C",     // Soft Red/Orange
+  water: "#76BDFE",    // Sky Blue
+  bug: "#A8B820",      // Olive Green
+  
+  // Expanded Types
+  electric: "#FFD86E", // Bright Yellow
+  psychic: "#F85888",  // Pink
+  ice: "#98D8D8",      // Cyan
+  dragon: "#7038F8",   // Deep Purple
+  ghost: "#705898",    // Indigo
+  poison: "#A040A0",   // Purple
+  ground: "#E0C068",   // Sandy Brown
+  rock: "#B8A038",     // Rock Grey
+  flying: "#A890F0",   // Lavender
+  fighting: "#C03028", // Deep Red
+  normal: "#A8A878",   // Sage
+  steel: "#B8B8D0",    // Metallic Blue
+  fairy: "#EE99AC",    // Rose
+  dark: "#705848"      // Espresso
+};
+
 export default function Index() {
 
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
@@ -54,9 +78,17 @@ export default function Index() {
   }
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{
+      gap: 16,
+      padding: 16
+    }}>
       { pokemons.map((pokemon) => (
-        <View key={pokemon.name}>
+        <View key={pokemon.name} style={{
+          // @ts-ignore
+          backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
+          padding: 20,
+          borderRadius: 20
+        }}>
           <Text style={styles.name}>{pokemon.name}</Text>
           <Text style={styles.type}>{pokemon.types[0].type.name}</Text>
           <View style= {{
@@ -80,11 +112,13 @@ export default function Index() {
 const styles = StyleSheet.create({
   name: {
     fontSize: 28,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    textAlign: "center"
   },
   type: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "gray"
+    color: "gray",
+    textAlign: "center"
   }
 })
