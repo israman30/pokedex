@@ -1,3 +1,4 @@
+
 export const Colors = {
     primary: "#FF0000",
     secondary: "#00FF00",
@@ -11,4 +12,5 @@ export const Colors = {
     fighting: "#C22E28",
     poison: "#A33EA1",
     ground: "#E2BF65",
+    Background: "#F5F5F5"
 }
