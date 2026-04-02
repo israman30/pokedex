@@ -4,11 +4,12 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../colors/color';
 import { Coordinates, Direction, GestureEventType } from '../types/types';
+import checkGameOver from '../utils/CheckGameOver';
 import Snake from './Snake';
 
 const SNAKE_INITIAL_POSITION = [{ x: 5, y: 5 }];
 const FOOD_INITIAL_POSITION = { x: 10, y: 10 };
-const GAME_BOUNDS = { xMin: 0, xMax: 35, yMin: 0, yMax: 63 };
+const GAME_BOUNDS = { xMin: 0, xMax: 35, yMin: 0, yMax: 70 };
 const MOVE_INTERVAL = 200; // milliseconds
 const SCORE_INCREMENT = 10;
 
@@ -25,8 +26,9 @@ export default function Game(): React.JSX.Element {
             const intervalId = setInterval(() => {
                 !isPaused && moveSnake();
             }, MOVE_INTERVAL)
+            return () => clearInterval(intervalId); // clear interval on component unmount or when game is over
         }
-    }, []);
+    }, [snake, isGameOver, isPaused]);
 
     // const [score, setScore] = React.useState(0);
 
@@ -35,6 +37,10 @@ export default function Game(): React.JSX.Element {
         const newHead = { ...head }; // copy of the head
 
         // game over
+        if (checkGameOver(head, GAME_BOUNDS)) {
+            setIsGameOver((prev) => !prev);
+            return;
+        }
 
         switch (direction) {
             case Direction.UP:
@@ -52,6 +58,9 @@ export default function Game(): React.JSX.Element {
             default:
                 break;
         }
+
+        // if eats food
+        // grow snake
         setSnake([newHead, ...snake.slice(0, -1)]); // move the snake by adding new head and removing tail
     }
 
